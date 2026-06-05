@@ -2,11 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AppShell from '@/components/AppShell';
-import Avatar from '@/components/Avatar';
-import { createClient } from '@/lib/supabase/client';
-import { displayName } from '@/lib/balances';
-import type { Profile } from '@/types/database';
+import { createBrowserClient } from '@supabase/ssr';
+
+// Self-contained: no '@/components' or '@/lib' imports, so it always compiles.
+function supabase() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+}
+
+function initials(name: string) {
+  const p = name.trim().split(/\s+/);
+  return (p.length === 1 ? p[0].slice(0, 2) : p[0][0] + p[p.length - 1][0]).toUpperCase();
+}
+
+type Profile = { id: string; email: string | null; full_name: string | null };
 
 export default function AccountPage() {
   const router = useRouter();
@@ -17,20 +28,22 @@ export default function AccountPage() {
 
   useEffect(() => {
     (async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const sb = supabase();
+      const { data: { user } } = await sb.auth.getUser();
       if (!user) return;
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      setMe(data as Profile);
-      setName((data as Profile)?.full_name ?? '');
+      const { data } = await sb.from('profiles').select('id,email,full_name').eq('id', user.id).single();
+      const prof = (data as Profile) ?? { id: user.id, email: user.email ?? null, full_name: null };
+      setMe(prof);
+      setName(prof.full_name ?? '');
     })();
   }, []);
+
+  const label = me?.full_name || me?.email?.split('@')[0] || 'You';
 
   async function saveName() {
     if (!me) return;
     setSaving(true);
-    const supabase = createClient();
-    await supabase.from('profiles').update({ full_name: name.trim() }).eq('id', me.id);
+    await supabase().from('profiles').update({ full_name: name.trim() }).eq('id', me.id);
     setMe({ ...me, full_name: name.trim() });
     setEditing(false);
     setSaving(false);
@@ -38,76 +51,64 @@ export default function AccountPage() {
   }
 
   async function signOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await supabase().auth.signOut();
     router.replace('/login');
     router.refresh();
   }
 
-  const label = me ? displayName(me) : '';
-
   return (
-    <AppShell title="Account">
-      {/* Hero — kept in normal flow so nothing overlaps */}
-      <section className="card mb-4 flex flex-col items-center gap-3 bg-gradient-to-b from-brand to-brand-600 p-6 text-white">
-        <Avatar name={label || 'You'} size={88} />
+    <div className="mx-auto min-h-screen w-full max-w-2xl bg-[#F7F8FA] px-4 py-4">
+      <div className="mb-4 flex items-center gap-3 rounded-xl bg-[#1CC29F] px-4 py-3 text-white">
+        <button onClick={() => router.push('/dashboard')} aria-label="Back" className="-ml-1 rounded-full p-1 hover:bg-white/15">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+        <h1 className="flex-1 text-base font-bold">Account</h1>
+      </div>
+
+      {/* Hero — normal flow, no overlap */}
+      <section className="mb-4 flex flex-col items-center gap-3 rounded-2xl bg-gradient-to-b from-[#1CC29F] to-[#16A085] p-6 text-white shadow">
+        <span className="grid h-20 w-20 place-items-center rounded-full bg-white/20 text-2xl font-bold ring-4 ring-white/40">
+          {initials(label)}
+        </span>
         <div className="text-center">
-          <p className="text-xl font-extrabold leading-tight">{label}</p>
+          <p className="text-xl font-extrabold">{label}</p>
           <p className="text-sm text-white/85">{me?.email}</p>
         </div>
       </section>
 
-      {/* Profile card */}
-      <section className="card mb-4 p-5">
+      <section className="mb-4 rounded-2xl border border-[#E9ECEF] bg-white p-5 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-ink">Your profile</h2>
-          {!editing && (
-            <button onClick={() => setEditing(true)} className="flex items-center gap-1 text-sm font-semibold text-brand">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Edit
-            </button>
-          )}
+          <h2 className="text-sm font-bold text-[#2E3942]">Your profile</h2>
+          {!editing && <button onClick={() => setEditing(true)} className="text-sm font-semibold text-[#1CC29F]">Edit</button>}
         </div>
 
         {editing ? (
           <div className="space-y-3">
-            <div>
-              <label className="label">Name</label>
-              <input className="input" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
-            </div>
+            <input className="w-full rounded-lg border border-[#E9ECEF] px-3 py-2.5 text-sm outline-none focus:border-[#1CC29F]"
+              value={name} onChange={(e) => setName(e.target.value)} autoFocus />
             <div className="flex gap-2">
-              <button onClick={saveName} disabled={saving} className="btn-primary flex-1">
+              <button onClick={saveName} disabled={saving}
+                className="flex-1 rounded-lg bg-[#1CC29F] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50">
                 {saving ? 'Saving…' : 'Save'}
               </button>
-              <button onClick={() => { setEditing(false); setName(me?.full_name ?? ''); }} className="btn-ghost flex-1">
+              <button onClick={() => { setEditing(false); setName(me?.full_name ?? ''); }}
+                className="flex-1 rounded-lg border border-[#E9ECEF] bg-white px-4 py-2.5 text-sm font-semibold text-[#2E3942]">
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <dl className="divide-y divide-line">
-            <div className="flex items-center justify-between py-3">
-              <dt className="text-sm text-muted">Name</dt>
-              <dd className="text-sm font-semibold text-ink">{label}</dd>
-            </div>
-            <div className="flex items-center justify-between py-3">
-              <dt className="text-sm text-muted">Email</dt>
-              <dd className="text-sm font-semibold text-ink">{me?.email}</dd>
-            </div>
+          <dl className="divide-y divide-[#E9ECEF]">
+            <div className="flex justify-between py-3"><dt className="text-sm text-[#8A9199]">Name</dt><dd className="text-sm font-semibold text-[#2E3942]">{label}</dd></div>
+            <div className="flex justify-between py-3"><dt className="text-sm text-[#8A9199]">Email</dt><dd className="text-sm font-semibold text-[#2E3942]">{me?.email}</dd></div>
           </dl>
         )}
       </section>
 
-      <button onClick={signOut} className="btn-ghost w-full text-owe">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+      <button onClick={signOut} className="w-full rounded-lg border border-[#E9ECEF] bg-white px-4 py-2.5 text-sm font-semibold text-[#FF652F]">
         Sign out
       </button>
-
-      <p className="mt-4 text-center text-xs text-muted">Splitr · accounts are managed in Supabase</p>
-    </AppShell>
+      <p className="mt-4 text-center text-xs text-[#8A9199]">Splitr · accounts are managed in Supabase</p>
+    </div>
   );
 }
