@@ -1,0 +1,96 @@
+/* ===== REGISTER PAGE STYLES ===== */
+
+.register-page {
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.reg-brand-bg {
+  background: linear-gradient(-45deg, #0D9373, #1CC29F, #16A085, #0E7C63, #1DD4AC);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+
+@keyframes regFloat1 { 0%,100%{ transform: translate(0,0) scale(1); } 50%{ transform: translate(30px,-40px) scale(1.1); } }
+@keyframes regFloat2 { 0%,100%{ transform: translate(0,0) scale(1); } 50%{ transform: translate(-25px,35px) scale(1.05); } }
+.reg-blob-1 { animation: regFloat1 8s ease-in-out infinite; }
+.reg-blob-2 { animation: regFloat2 10s ease-in-out infinite; }
+
+@keyframes regSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes regSlideLeft { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes regFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.reg-anim-slide-up { animation: regSlideUp 0.7s ease-out forwards; }
+.reg-anim-slide-left { animation: regSlideLeft 0.7s ease-out forwards; }
+.reg-anim-fade { animation: regFadeIn 0.8s ease-out forwards; }
+.reg-delay-1 { animation-delay: 0.15s; opacity: 0; }
+.reg-delay-2 { animation-delay: 0.3s; opacity: 0; }
+.reg-delay-3 { animation-delay: 0.45s; opacity: 0; }
+.reg-delay-4 { animation-delay: 0.6s; opacity: 0; }
+.reg-delay-5 { animation-delay: 0.75s; opacity: 0; }
+
+.reg-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1.5px solid #E2E8F0;
+  background: #FAFBFC;
+  padding: 12px 14px 12px 44px;
+  font-size: 14px;
+  color: #1E293B;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.reg-input::placeholder { color: #94A3B8; }
+.reg-input:focus {
+  border-color: #1CC29F;
+  box-shadow: 0 0 0 4px rgba(28,194,159,0.12);
+  background: #fff;
+}
+
+.reg-btn {
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1CC29F 0%, #16A085 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(28,194,159,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.reg-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(28,194,159,0.45);
+}
+.reg-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+@keyframes regShimmer { 0% { left: -100%; } 100% { left: 100%; } }
+.reg-btn::after {
+  content: "";
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: regShimmer 3s infinite;
+}
+
+@keyframes regSpin { to { transform: rotate(360deg); } }
+.reg-spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: regSpin 0.7s linear infinite;
+  margin-right: 8px; vertical-align: middle;
+}
+
+@keyframes regFloatIcon1 { 0%,100%{ transform: translateY(0) rotate(0deg); } 50%{ transform: translateY(-18px) rotate(8deg); } }
+@keyframes regFloatIcon2 { 0%,100%{ transform: translateY(0) rotate(0deg); } 50%{ transform: translateY(-14px) rotate(-6deg); } }
+@keyframes regFloatIcon3 { 0%,100%{ transform: translateY(0) rotate(0deg); } 50%{ transform: translateY(-20px) rotate(5deg); } }
+.reg-float-1 { animation: regFloatIcon1 5s ease-in-out infinite; }
+.reg-float-2 { animation: regFloatIcon2 6s ease-in-out infinite 0.5s; }
+.reg-float-3 { animation: regFloatIcon3 7s ease-in-out infinite 1s; }

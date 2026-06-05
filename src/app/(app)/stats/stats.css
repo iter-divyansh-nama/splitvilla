@@ -1,0 +1,80 @@
+/* ===== STATS PAGE STYLES ===== */
+
+/* ---- Donut chart animation ---- */
+@keyframes donutSpin {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(-90deg); }
+}
+.donut-chart {
+  transform: rotate(-90deg);
+}
+
+@keyframes strokeDraw {
+  from { stroke-dashoffset: var(--circumference); }
+  to { stroke-dashoffset: var(--target-offset); }
+}
+.donut-segment {
+  animation: strokeDraw 1.2s ease-out forwards;
+  stroke-dashoffset: var(--circumference);
+}
+
+/* ---- Bar chart animation ---- */
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.bar-fill {
+  transform-origin: left center;
+  animation: barGrow 0.8s ease-out forwards;
+}
+
+/* ---- Slide-in ---- */
+@keyframes statsSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stats-card {
+  animation: statsSlideUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+.stats-delay-1 { animation-delay: 0.1s; }
+.stats-delay-2 { animation-delay: 0.2s; }
+.stats-delay-3 { animation-delay: 0.3s; }
+.stats-delay-4 { animation-delay: 0.4s; }
+
+/* ---- Counter animation ---- */
+@keyframes fadeCounter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.counter-anim {
+  animation: fadeCounter 0.6s ease-out forwards;
+}
+
+/* ---- Legend dot pulse ---- */
+@keyframes legendPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+.legend-dot {
+  animation: legendPulse 2s ease-in-out infinite;
+}
+
+/* ---- Gradient header ---- */
+.stats-header {
+  background: linear-gradient(135deg, #1CC29F 0%, #0D9373 100%);
+}
+
+/* ---- Summary stat card ---- */
+.stat-pill {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+.stat-pill:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}

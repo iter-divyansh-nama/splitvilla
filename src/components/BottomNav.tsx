@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, Activity, User, Plus } from "lucide-react";
+import { Users, Activity, User, Plus, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { href: "/dashboard", label: "Groups", icon: Users },
   { href: "/activity", label: "Activity", icon: Activity },
+  { href: "/stats", label: "Stats", icon: BarChart3 },
   { href: "/account", label: "Account", icon: User },
 ];
 
@@ -20,7 +21,7 @@ export function BottomNav() {
       style={{ paddingBottom: "var(--sab)" }}
     >
       <div className="relative mx-auto flex max-w-lg items-stretch justify-around px-2">
-        {tabs.slice(0, 1).map((t) => (
+        {tabs.slice(0, 2).map((t) => (
           <NavItem key={t.href} {...t} active={isActive(pathname, t.href)} />
         ))}
 
@@ -35,7 +36,7 @@ export function BottomNav() {
           </Link>
         </div>
 
-        {tabs.slice(1).map((t) => (
+        {tabs.slice(2).map((t) => (
           <NavItem key={t.href} {...t} active={isActive(pathname, t.href)} />
         ))}
       </div>
