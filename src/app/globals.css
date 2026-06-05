@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+}
+
+html,
+body {
+  background: #ffffff;
+  color: #2a2e32;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Subtle dotted texture used behind hero areas */
+.bg-dotted {
+  background-image: radial-gradient(rgba(28, 194, 159, 0.12) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.teal-gradient {
+  background: linear-gradient(135deg, #1cc29f 0%, #15a98b 60%, #0f8a72 100%);
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white shadow-card border border-line;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3
+           font-semibold text-[15px] transition active:scale-[.98] disabled:opacity-50
+           disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn teal-gradient text-white shadow-card;
+  }
+  .btn-ghost {
+    @apply btn bg-cloud text-ink hover:bg-line;
+  }
+  .input {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px]
+           outline-none transition focus:border-teal-500
+           focus:ring-2 focus:ring-teal-100 placeholder:text-muted;
+  }
+  .label {
+    @apply mb-1.5 block text-[13px] font-semibold text-muted;
+  }
+  .pill {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-[12px] font-bold;
+  }
+}
+
+/* Hide scrollbars on horizontal chip rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Staggered entrance for lists */
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: riseIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
