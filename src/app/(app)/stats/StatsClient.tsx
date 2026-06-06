@@ -22,6 +22,13 @@ interface GroupBalance {
   net: number;
 }
 
+interface TopSpender {
+  id: string;
+  name: string;
+  amount: number;
+  isMe: boolean;
+}
+
 function formatMoney(n: number): string {
   const abs = Math.abs(n);
   const formatted = abs.toLocaleString(undefined, {
@@ -154,6 +161,7 @@ export default function StatsClient({
   categoryData,
   myExpenseData,
   groupBalances,
+  topSpenders,
   groupCount,
   expenseCount,
 }: {
@@ -164,6 +172,7 @@ export default function StatsClient({
   categoryData: CategoryItem[];
   myExpenseData: CategoryItem[];
   groupBalances: GroupBalance[];
+  topSpenders: TopSpender[];
   groupCount: number;
   expenseCount: number;
 }) {
@@ -178,6 +187,21 @@ export default function StatsClient({
   }));
 
   const maxGroupBal = Math.max(...groupBalances.map((g) => Math.abs(g.net)), 1);
+  const maxSpender = topSpenders.length > 0 ? topSpenders[0].amount : 1;
+
+  // Simple hash function for avatar colors
+  const colorFromId = (id: string) => {
+    const palette = ["#1CC29F", "#FF652F", "#5B8DEF", "#9B5DE5", "#F15BB5", "#00BBF9", "#F4A259", "#43AA8B"];
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    return palette[Math.abs(hash) % palette.length];
+  };
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
@@ -338,6 +362,56 @@ export default function StatsClient({
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#FF652F]" /> You owe
                 </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ---- Top Spenders Leaderboard ---- */}
+        {topSpenders.length > 0 && (
+          <div className="stats-card stats-delay-4 overflow-hidden rounded-2xl border border-[#E9ECEF] bg-white shadow-sm">
+            <div className="p-5">
+              <h2 className="mb-4 flex items-center gap-2 text-base font-black text-[#1E293B]">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9B5DE5" strokeWidth="2" strokeLinecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                Top Spenders
+              </h2>
+
+              <div className="space-y-4">
+                {topSpenders.map((user, i) => (
+                  <div key={user.id} className="flex items-center gap-3">
+                    <div className="relative flex shrink-0 items-center justify-center">
+                      <div
+                        className="flex h-10 w-10 items-center justify-center rounded-full text-[13px] font-bold text-white"
+                        style={{ backgroundColor: colorFromId(user.id) }}
+                      >
+                        {getInitials(user.name)}
+                      </div>
+                      {i === 0 && (
+                        <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-400 text-[10px] shadow-sm">
+                          👑
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="flex items-center gap-2 text-sm font-bold text-[#1E293B]">
+                        {user.isMe ? "You" : user.name}
+                      </p>
+                      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[#F0F2F5]">
+                        <div
+                          className="bar-fill h-full rounded-full bg-[#9B5DE5]"
+                          style={{
+                            width: `${(user.amount / maxSpender) * 100}%`,
+                            animationDelay: `${i * 0.1}s`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-[#64748B]">{formatMoney(user.amount)}</p>
+                      <p className="text-[10px] font-bold uppercase text-[#94A3B8]">Paid</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

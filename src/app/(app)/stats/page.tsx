@@ -105,6 +105,24 @@ export default async function StatsPage() {
     }))
     .sort((a, b) => b.amount - a.amount);
 
+  // ---- Top Spenders ----
+  const userSpent: Record<string, number> = {};
+  for (const g of ws.groups) {
+    for (const e of ws.expensesByGroup[g.id] ?? []) {
+      userSpent[e.paid_by] = (userSpent[e.paid_by] ?? 0) + Number(e.amount);
+    }
+  }
+
+  const topSpenders = Object.entries(userSpent)
+    .map(([uid, amount]) => ({
+      id: uid,
+      name: displayName(ws.profiles[uid]),
+      amount,
+      isMe: uid === user.id,
+    }))
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 5);
+
   return (
     <StatsClient
       totalSpent={totalSpent}
@@ -114,6 +132,7 @@ export default async function StatsPage() {
       categoryData={categoryData}
       myExpenseData={myExpenseData}
       groupBalances={groupBalances}
+      topSpenders={topSpenders}
       groupCount={ws.groups.length}
       expenseCount={Object.values(ws.expensesByGroup).flat().length}
     />

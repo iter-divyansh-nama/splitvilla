@@ -40,7 +40,7 @@
   font-size: 14px;
   color: #1E293B;
   outline: none;
-  transition: all 0.3s ease;
+  transition: all 0.05s ease;
 }
 .reg-input::placeholder { color: #94A3B8; }
 .reg-input:focus {
@@ -59,7 +59,7 @@
   font-size: 15px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.05s ease;
   box-shadow: 0 4px 15px rgba(28,194,159,0.35);
   position: relative;
   overflow: hidden;

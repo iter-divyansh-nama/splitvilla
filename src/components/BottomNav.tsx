@@ -30,7 +30,7 @@ export function BottomNav() {
           <Link
             href="/expense/new"
             aria-label="Add expense"
-            className="teal-gradient -mt-6 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-float transition active:scale-95"
+            className="teal-gradient -mt-6 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-float transition-all duration-75 active:scale-95"
           >
             <Plus size={26} strokeWidth={2.6} />
           </Link>
@@ -65,7 +65,7 @@ function NavItem({
     <Link
       href={href}
       className={cn(
-        "flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-semibold transition",
+        "flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-semibold transition-all duration-75 active:scale-95",
         active ? "text-teal-600" : "text-muted"
       )}
     >

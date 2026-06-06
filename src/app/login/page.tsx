@@ -220,10 +220,10 @@ export default function LoginPage() {
           <div className="anim-slide-left delay-5 text-center">
             <a
               href="/register"
-              className="group inline-flex items-center gap-2 rounded-xl border-2 border-[#E2E8F0] bg-white px-6 py-3 text-sm font-bold text-[#1CC29F] shadow-sm transition-all hover:border-[#1CC29F] hover:shadow-md"
+              className="group inline-flex items-center gap-2 rounded-xl border-2 border-[#E2E8F0] bg-white px-6 py-3 text-sm font-bold text-[#1CC29F] shadow-sm transition-all duration-75 active:scale-95 hover:border-[#1CC29F] hover:shadow-md"
             >
               Create a free account
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="transition-transform group-hover:translate-x-1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="transition-transform duration-75 group-hover:translate-x-1">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>

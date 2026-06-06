@@ -217,7 +217,7 @@ export function ExpenseForm({
                   key={g.id}
                   onClick={() => onGroupChange(g.id)}
                   className={cn(
-                    "flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-[14px] font-semibold transition",
+                    "flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-[14px] font-semibold transition-all duration-75 active:scale-95",
                     g.id === groupId
                       ? "bg-teal-100 text-teal-700 ring-2 ring-teal-500"
                       : "bg-cloud text-ink"
@@ -269,7 +269,7 @@ export function ExpenseForm({
                 key={c.key}
                 onClick={() => setCategory(c.key)}
                 className={cn(
-                  "flex shrink-0 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[11px] font-semibold transition",
+                  "flex shrink-0 flex-col items-center gap-1 rounded-xl px-3 py-2 text-[11px] font-semibold transition-all duration-75 active:scale-95",
                   c.key === category
                     ? "bg-teal-100 text-teal-700 ring-2 ring-teal-500"
                     : "bg-cloud text-muted"
@@ -324,7 +324,7 @@ export function ExpenseForm({
                 key={key}
                 onClick={() => setSplitType(key)}
                 className={cn(
-                  "flex-1 rounded-lg py-2 transition",
+                  "flex-1 rounded-lg py-2 transition-all duration-75 active:scale-95",
                   splitType === key ? "bg-white text-ink shadow-card" : "text-muted"
                 )}
               >

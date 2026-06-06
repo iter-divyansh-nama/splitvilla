@@ -240,7 +240,7 @@ function TabBtn({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 transition",
+        "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 transition-all duration-75 active:scale-95",
         active ? "bg-white text-ink shadow-card" : "text-muted"
       )}
     >
@@ -398,7 +398,7 @@ function ExpenseRow({
         </div>
         <ChevronDown
           size={18}
-          className={cn("text-muted transition", open && "rotate-180")}
+          className={cn("text-muted transition-transform duration-75", open && "rotate-180")}
         />
       </button>
 
